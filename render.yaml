@@ -26,27 +26,3 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
-
-*.py[cod]
-__pycache__/
-*.so
-*.egg
-*.egg-info/
-dist/
-build/
-
-venv/
-env/
-
-*.log
-db.sqlite3
-db.sqlite3-journal
-/staticfiles/
-/media/
-
-.env
-
-.vscode/
-.idea/
-*.swp
-*.swo
