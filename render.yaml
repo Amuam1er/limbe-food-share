@@ -26,15 +26,7 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
-```
 
----
-
-### Step 24: Create `.gitignore`
-
-Create a file called `.gitignore` in your project root and paste:
-```
-# Python
 *.py[cod]
 __pycache__/
 *.so
@@ -43,21 +35,17 @@ __pycache__/
 dist/
 build/
 
-# Virtual Environment
 venv/
 env/
 
-# Django
 *.log
 db.sqlite3
 db.sqlite3-journal
 /staticfiles/
 /media/
 
-# Environment variables
 .env
 
-# IDE
 .vscode/
 .idea/
 *.swp
