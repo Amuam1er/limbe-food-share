@@ -1,0 +1,55 @@
+{% extends 'donations/base.html' %}
+
+{% block title %}Verify Donation - Limbe Food Share{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-center">
+                <h3 class="mb-0">📧 Verify Your Donation</h3>
+            </div>
+            <div class="card-body text-center">
+                <p class="mb-4">
+                    We've sent a 4-digit PIN to:<br>
+                    <strong>{{ donation.donor_email }}</strong>
+                </p>
+                
+                <div class="alert alert-info">
+                    <small>
+                        <strong>Can't find the email?</strong><br>
+                        Check your spam folder. The PIN expires in 10 minutes.
+                    </small>
+                </div>
+                
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        {{ form.pin }}
+                        {% if form.pin.errors %}
+                            <div class="text-danger mt-2">{{ form.pin.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning btn-lg">
+                            Verify & Publish
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                            Back to Home
+                        </a>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <small class="text-muted">
+                    Donation: <strong>{{ donation.title }}</strong><br>
+                    Quantity: {{ donation.quantity }}
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

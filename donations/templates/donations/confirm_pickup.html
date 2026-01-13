@@ -1,0 +1,50 @@
+{% extends 'donations/base.html' %}
+
+{% block title %}Confirm Pickup - Limbe Food Share{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white text-center">
+                <h3 class="mb-0">✅ Confirm Pickup</h3>
+            </div>
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <h4>{{ claim.donation.title }}</h4>
+                    <p class="text-muted">{{ claim.donation.quantity }}</p>
+                </div>
+                
+                <div class="alert alert-light text-start">
+                    <strong>Volunteer:</strong> {{ claim.volunteer_name }}<br>
+                    <strong>Phone:</strong> {{ claim.volunteer_phone }}<br>
+                    <strong>Claimed:</strong> {{ claim.claimed_at|date:"M d, Y g:i A" }}
+                </div>
+                
+                <p class="mb-4">
+                    Has <strong>{{ claim.volunteer_name }}</strong> successfully picked up this donation?
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            ✓ Yes, Confirm Pickup
+                        </button>
+                        <a href="{% url 'donation_detail' claim.donation.id %}" class="btn btn-outline-secondary">
+                            Not Yet
+                        </a>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <small class="text-muted">
+                    Thank you for reducing food waste in Limbe! 💚
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

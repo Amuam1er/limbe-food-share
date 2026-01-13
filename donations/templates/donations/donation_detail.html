@@ -1,0 +1,157 @@
+{% extends 'donations/base.html' %}
+
+{% block title %}{{ donation.title }} - Limbe Food Share{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Left Column: Donation Details -->
+    <div class="col-md-8">
+        <div class="card">
+            {% if donation.photo_url %}
+                <img src="{{ donation.photo_url }}" class="card-img-top" alt="{{ donation.title }}" style="max-height: 400px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 300px;">
+                    <span class="text-muted" style="font-size: 100px;">🍽️</span>
+                </div>
+            {% endif %}
+            
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h2 class="card-title mb-0">{{ donation.title }}</h2>
+                    <span class="badge status-{{ donation.status }} fs-6">
+                        {{ donation.get_status_display }}
+                    </span>
+                </div>
+                
+                <div class="mb-3">
+                    <span class="badge badge-{{ donation.donor_type }} me-2">
+                        {{ donation.get_donor_type_display }}
+                    </span>
+                    {% if donation.is_verified %}
+                        <span class="badge bg-success">✓ Verified</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending Verification</span>
+                    {% endif %}
+                </div>
+                
+                {% if donation.description %}
+                    <p class="card-text">{{ donation.description }}</p>
+                {% endif %}
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h6>📦 Quantity</h6>
+                        <p>{{ donation.quantity }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>⏰ Expires</h6>
+                        <p>{{ donation.expiry_time|date:"M d, Y g:i A" }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>📍 Pickup Location</h6>
+                        <p>{{ donation.pickup_address }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>🕐 Pickup Window</h6>
+                        <p>Until {{ donation.pickup_window_end|date:"M d, g:i A" }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>👤 Donor</h6>
+                        <p>{{ donation.donor_name }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h6>📅 Posted</h6>
+                        <p>{{ donation.created_at|date:"M d, Y g:i A" }}</p>
+                    </div>
+                </div>
+                
+                {% if donation.is_available %}
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'claim_donation' donation.id %}" class="btn btn-primary btn-lg">
+                            🙋 Claim This Donation
+                        </a>
+                    </div>
+                {% elif donation.status == 'picked_up' %}
+                    <div class="alert alert-success mt-4">
+                        ✅ This donation has been successfully picked up!
+                    </div>
+                {% elif donation.status == 'claimed' %}
+                    <div class="alert alert-warning mt-4">
+                        ⏳ This donation is currently claimed. Check back if pickup doesn't happen.
+                    </div>
+                {% else %}
+                    <div class="alert alert-secondary mt-4">
+                        This donation is no longer available.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column: Claims & Activity -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Activity</h5>
+            </div>
+            <div class="card-body">
+                {% if claims %}
+                    {% for claim in claims %}
+                        <div class="mb-3 p-3 border rounded">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <strong>{{ claim.volunteer_name }}</strong>
+                                <span class="badge bg-secondary">{{ claim.get_status_display }}</span>
+                            </div>
+                            
+                            <small class="text-muted">
+                                📞 {{ claim.masked_phone }}<br>
+                                🕐 {{ claim.claimed_at|date:"M d, g:i A" }}
+                            </small>
+                            
+                            {% if claim.status == 'pending' %}
+                                <div class="alert alert-warning mt-2 mb-0 small">
+                                    ⏱️ 5-minute hold active
+                                </div>
+                            {% elif claim.status == 'confirmed' %}
+                                <div class="mt-2">
+                                    <a href="{% url 'confirm_pickup' claim.id %}" class="btn btn-success btn-sm w-100">
+                                        ✓ Mark as Picked Up
+                                    </a>
+                                </div>
+                            {% elif claim.status == 'picked_up' %}
+                                <div class="alert alert-success mt-2 mb-0 small">
+                                    ✅ Picked up at {{ claim.picked_up_at|date:"g:i A" }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted text-center">No claims yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6>Need Help?</h6>
+                <p class="small text-muted mb-2">
+                    Contact the donor at:<br>
+                    📞 {{ donation.donor_phone }}
+                </p>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-sm w-100">
+                    ← Back to All Donations
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Auto-refresh every 30 seconds to update claim status -->
+<script>
+    setTimeout(function() {
+        location.reload();
+    }, 30000);
+</script>
+{% endblock %}

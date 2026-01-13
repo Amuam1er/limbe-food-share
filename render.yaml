@@ -1,0 +1,64 @@
+databases:
+  - name: limbefoodshare-db
+    databaseName: limbefoodshare
+    user: limbefoodshare
+
+services:
+  - type: web
+    name: limbe-food-share
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn foodshare.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.3
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: DATABASE_URL
+        fromDatabase:
+          name: limbefoodshare-db
+          property: connectionString
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+```
+
+---
+
+### Step 24: Create `.gitignore`
+
+Create a file called `.gitignore` in your project root and paste:
+```
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Virtual Environment
+venv/
+env/
+
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo

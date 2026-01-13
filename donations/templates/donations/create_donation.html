@@ -1,0 +1,133 @@
+{% extends 'donations/base.html' %}
+
+{% block title %}Donate Food - Limbe Food Share{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Donate Food</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-4">
+                    Share your surplus food with those who need it. We'll send you a verification PIN via email.
+                </p>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Donor Information -->
+                    <h5 class="border-bottom pb-2 mb-3">Your Information</h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.donor_name.label }}</label>
+                        {{ form.donor_name }}
+                        {% if form.donor_name.errors %}
+                            <div class="text-danger small">{{ form.donor_name.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.donor_type.label }}</label>
+                        {{ form.donor_type }}
+                        {% if form.donor_type.errors %}
+                            <div class="text-danger small">{{ form.donor_type.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ form.donor_phone.label }}</label>
+                            {{ form.donor_phone }}
+                            {% if form.donor_phone.errors %}
+                                <div class="text-danger small">{{ form.donor_phone.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ form.donor_email.label }}</label>
+                            {{ form.donor_email }}
+                            <small class="form-text text-muted">We'll send your verification PIN here</small>
+                            {% if form.donor_email.errors %}
+                                <div class="text-danger small">{{ form.donor_email.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Food Details -->
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Food Details</h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.title.label }}</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger small">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.quantity.label }}</label>
+                        {{ form.quantity }}
+                        {% if form.quantity.errors %}
+                            <div class="text-danger small">{{ form.quantity.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.description.label }}</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Food Photo (Optional)</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*">
+                        <small class="form-text text-muted">A photo helps volunteers know what to expect</small>
+                    </div>
+                    
+                    <!-- Pickup Information -->
+                    <h5 class="border-bottom pb-2 mb-3 mt-4">Pickup Details</h5>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.pickup_address.label }}</label>
+                        {{ form.pickup_address }}
+                        {% if form.pickup_address.errors %}
+                            <div class="text-danger small">{{ form.pickup_address.errors }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ form.expiry_time.label }}</label>
+                            {{ form.expiry_time }}
+                            <small class="form-text text-muted">When will this food expire?</small>
+                            {% if form.expiry_time.errors %}
+                                <div class="text-danger small">{{ form.expiry_time.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ form.pickup_window_end.label }}</label>
+                            {{ form.pickup_window_end }}
+                            <small class="form-text text-muted">Last time for pickup</small>
+                            {% if form.pickup_window_end.errors %}
+                                <div class="text-danger small">{{ form.pickup_window_end.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Post Donation & Get PIN
+                        </button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

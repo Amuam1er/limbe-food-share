@@ -1,0 +1,88 @@
+{% extends 'donations/base.html' %}
+
+{% block title %}Available Food - Limbe Food Share{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Available Food Donations</h1>
+        <p class="text-muted">Fresh food ready for pickup in Limbe</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'create_donation' %}" class="btn btn-primary btn-lg">
+            + Donate Food
+        </a>
+    </div>
+</div>
+
+{% if donations %}
+    <div class="row">
+        {% for donation in donations %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card donation-card">
+                    {% if donation.photo_url %}
+                        <img src="{{ donation.photo_url }}" class="card-img-top" alt="{{ donation.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <span class="text-muted fs-1">🍽️</span>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body">
+                        <h5 class="card-title">{{ donation.title }}</h5>
+                        
+                        <div class="mb-2">
+                            <span class="badge badge-{{ donation.donor_type }}">
+                                {{ donation.get_donor_type_display }}
+                            </span>
+                            <span class="badge status-{{ donation.status }}">
+                                {{ donation.get_status_display }}
+                            </span>
+                        </div>
+                        
+                        <p class="card-text">
+                            <strong>Quantity:</strong> {{ donation.quantity }}<br>
+                            <strong>Pickup:</strong> {{ donation.pickup_address|truncatewords:5 }}<br>
+                            <strong>Expires:</strong> {{ donation.expiry_time|date:"M d, g:i A" }}
+                        </p>
+                        
+                        {% if donation.description %}
+                            <p class="card-text text-muted small">
+                                {{ donation.description|truncatewords:15 }}
+                            </p>
+                        {% endif %}
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'donation_detail' donation.id %}" class="btn btn-outline-primary">
+                                View Details
+                            </a>
+                            <a href="{% url 'claim_donation' donation.id %}" class="btn btn-primary">
+                                Claim This Food
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="card-footer text-muted small">
+                        Posted {{ donation.created_at|timesince }} ago
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info text-center py-5">
+        <h4>No food donations available right now</h4>
+        <p class="mb-3">Be the first to share!</p>
+        <a href="{% url 'create_donation' %}" class="btn btn-primary">
+            Donate Food
+        </a>
+    </div>
+{% endif %}
+
+<!-- Auto-refresh every 60 seconds -->
+<script>
+    setTimeout(function() {
+        location.reload();
+    }, 60000);
+</script>
+{% endblock %}
